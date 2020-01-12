@@ -3,6 +3,7 @@
 const functions = require('firebase-functions');
 const express = require('express');
 const line = require('@line/bot-sdk');
+const message = require('line-message-builder');
 
 // channel secretとaccess tokenをFirebaseの環境変数から呼び出す
 const config = {
@@ -21,41 +22,29 @@ app.post('/webhook', line.middleware(config), (req, res) => {
 const client = new line.Client(config);
 //ユーザから受け取ったイベントについてのハンドリングを実装する
 async function handleEvent(event) {
-    //返信メッセージ用のボディを組み立てる。typeの指定が必要。
-    let replyText = {
-        type: 'text',
-        text:  ''
-    }
     //ユーザから送られた各メッセージに対する処理を実装する。
     //https://developers.line.biz/ja/reference/messaging-api/#message-event を参照。
     switch (event.message.type) {
         case 'text':
-            replyText.text = 'テキストを受け取りました。'
-            return client.replyMessage(event.replyToken, replyText);
+            return client.replyMessage(event.replyToken, message.buildReplyText('テキストを受け取りました。'));
 
         case 'image':
-            replyText.text = '画像を受け取りました。'
-            return client.replyMessage(event.replyToken, replyText);
+            return client.replyMessage(event.replyToken, message.buildReplyText('画像を受け取りました。'));
 
         case 'video':
-            replyText.text = '動画を受け取りました。'
-            return client.replyMessage(event.replyToken, replyText);
+            return client.replyMessage(event.replyToken, message.buildReplyText('動画を受け取りました。'));
 
         case 'audio':
-            replyText.text = '音声を受け取りました。'
-            return client.replyMessage(event.replyToken, replyText);
+            return client.replyMessage(event.replyToken, message.buildReplyText('音声を受け取りました。'));
 
         case 'file':
-            replyText.text = 'ファイルを受け取りました。'
-            return client.replyMessage(event.replyToken, replyText);
+            return client.replyMessage(event.replyToken, message.buildReplyText('ファイルを受け取りました。'));
 
         case 'location':
-            replyText.text = '位置情報を受け取りました。'
-            return client.replyMessage(event.replyToken, replyText);
+            return client.replyMessage(event.replyToken, message.buildReplyText('位置情報を受け取りました。'));
 
         case 'sticker':
-            replyText.text = 'スタンプを受け取りました。'
-            return client.replyMessage(event.replyToken, replyText);
+            return client.replyMessage(event.replyToken, message.buildReplyText('スタンプを受け取りました。'));
         default:
             return Promise.resolve(null);
     }
